@@ -1,5 +1,7 @@
 import { useState } from 'react'
-import { Button, StyleSheet, Text, TextInput, View } from 'react-native'
+import { FlatList, StyleSheet, View } from 'react-native'
+import GoalItem from './components/GoalItem'
+import GoalInput from './components/GoalInput'
 
 export default function App() {
   const [goals, setGoals] = useState([])
@@ -10,26 +12,24 @@ export default function App() {
   }
 
   const addGoal = () => {
-    setGoals([...goals, currentGoal])
-    console.log(goals)
+    setGoals([...goals, { text: currentGoal, id: Math.random().toString() }])
   }
 
   return (
     <View style={styles.appContainer}>
-      <View style={styles.inputContainer}>
-        <TextInput
-          placeholder="Enter your goal!"
-          value={currentGoal}
-          onChange={updateGoal}
-        ></TextInput>
-        <View style={styles.addGoalBtn}>
-          <Button color="white" title="Add goal" onPress={addGoal} />
-        </View>
-      </View>
+      <GoalInput
+        addGoal={addGoal}
+        updateGoal={updateGoal}
+        currentGoal={currentGoal}
+      />
       <View style={styles.goalsList}>
-        {goals.map((goal) => (
-          <Text style={styles.goal}>{goal}</Text>
-        ))}
+        <FlatList
+          data={goals}
+          renderItem={({ item }) => {
+            return <GoalItem text={item.text} />
+          }}
+          keyExtractor={(item) => item.id}
+        />
       </View>
     </View>
   )
@@ -37,27 +37,13 @@ export default function App() {
 
 const styles = StyleSheet.create({
   appContainer: {
-    margin: 70,
+    marginTop: 60,
+    marginHorizontal: 40,
     flexDirection: 'column',
     flex: 1,
   },
-  inputContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    flex: 1,
-  },
-  addGoalBtn: {
-    backgroundColor: 'violet',
-  },
   goalsList: {
-    marginTop: 50,
+    marginVertical: 50,
     flex: 12,
-  },
-  goal: {
-    color: 'white',
-    backgroundColor: 'violet',
-    padding: 6,
-    marginTop: 5,
   },
 })
