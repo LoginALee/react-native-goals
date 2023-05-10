@@ -15,6 +15,8 @@ export default function App() {
     setGoals([...goals, { text: currentGoal, id: Math.random().toString() }])
   }
 
+  const deleteGoal = (id) => setGoals(goals.filter((goal) => goal.id !== id))
+
   return (
     <View style={styles.appContainer}>
       <GoalInput
@@ -26,7 +28,9 @@ export default function App() {
         <FlatList
           data={goals}
           renderItem={({ item }) => {
-            return <GoalItem text={item.text} />
+            return (
+              <GoalItem text={item.text} id={item.id} deleteGoal={deleteGoal} />
+            )
           }}
           keyExtractor={(item) => item.id}
         />
